@@ -11,13 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    /* Usuario u = Usuario(
-      codigo: 1,
-      login: "Rodolfo123",
-      nome: "Rodolfo",
-      senha: "@senhaforte123"
-    );*/
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: TelaLogin(),
