@@ -1,10 +1,24 @@
 import 'package:mimpedir/banco/database_helper.dart';
+import 'package:mimpedir/banco/tipo_DAO.dart';
 import 'package:mimpedir/banco/usuario_dao.dart';
 import 'package:mimpedir/restaurante.dart';
-import 'package:mimpedir/usuario.dart';
 import '../tipo.dart';
 
 class RestauranteDAO{
+
+  static Future<void> atualizar(int? cd, String? nome, String? lat, String? long, int? tipo) async{
+    final db = await DatabaseHelper.getDatabase();
+    final resultado = await db.update('tb_restaurante',
+      {
+        'nm_restaurante': nome,
+        'latitude_restaurante': lat,
+          'longitude_restaurante': long,
+        'cd_tipo': tipo
+      },
+      where: 'cd_restaurante = ?',
+      whereArgs: [cd]
+    );
+  }
 
   static Future<Restaurante>listar(int? cd) async{
     final db = await DatabaseHelper.getDatabase();
@@ -17,6 +31,7 @@ class RestauranteDAO{
       nome: resultado.first['nm_restaurante'] as String,
       latitude: resultado.first['latitude_restaurante'] as String,
       longitude: resultado.first['longitude_restaurante'] as String,
+      culinaria: await TipoDAO.listar(resultado.first['cd_tipo'] as int) as Tipo
     );
   }
 

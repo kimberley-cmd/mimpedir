@@ -10,7 +10,7 @@ class TelaEditarRestaurante extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return TelaEditarRestaurante();
+    return TelaEditarRestauranteState();
   }
 }
 
@@ -23,14 +23,17 @@ class TelaEditarRestauranteState extends State<TelaEditarRestaurante>{
   String? culinariaSelecionada;
   List<Tipo>tiposCulinaria = [];
   int? tipoCulinaria;
+  int? codigo = TelaEditarRestaurante.restaurante.codigo as int;
 
   void initState(){
     super.initState();
     carregarTipos();
     cdController.text = TelaEditarRestaurante().restaurante.codigo.toString()!;
     nomeController.text = TelaEditarRestaurante().restaurante.nome!;
-    latitudeController.text = TelaEditarRestaurante().restaurante.latitude.toString()!;
-    longitudeController.text = TelaEditarRestaurante().restaurante.longitude.toString()!;
+    latitudeController.text = TelaEditarRestaurante().restaurante.latitude;
+    longitudeController.text = TelaEditarRestaurante().restaurante.longitude;
+    tiposCulinaria = TelaEditarRestaurante.restaurante.culinaria?.codigo!;
+    culinariaSelecionada = TelaEditarRestaurante.restaurante?.descricao!;
   }
 
   Future<void> carregarTipos() async{
@@ -39,5 +42,38 @@ class TelaEditarRestauranteState extends State<TelaEditarRestaurante>{
       tiposCulinaria = lista;
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Atualizar Restaurante")),
+      body: Padding(padding: const EdgeInsets.all (30),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Informações do Restaurante: "),
+            SizedBox(height: 40),
+            Text('CÓDIGO'),
+            TextFormField(
+              decoration: InputDecoration(hintText: 'CÓDIGO'),
+              validator: (String? value){},
+              controller: cdController,
+              enabled: false,
+            ),
+          Text("Tipo de comida: "),
+          DropdownButtonFormField<String>(
+              value: culinariaSelecionada,
+              items: tiposCulinaria.map((tipo){
+                return DropdownMenuItem<String>(
+                value: tipo.descricao,
+                child: Text("${tipo.descricao}")
+                );
+              }).toList(),
+              OnChanged:(String? value){}
+    )
+          ],
+        ),
+     ),
+  };
 }
 

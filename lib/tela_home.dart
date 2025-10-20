@@ -59,8 +59,8 @@ class TelaHomeState extends State<TelaHome>{
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit, color: Colors.blue),
-                          onPressed: () {
-                            TelaEditarRestaurante.restaurante = r;
+                          onPressed: () async{
+                            TelaEditarRestaurante.restaurante = await RestauranteDAO.listar(r.codigo);
                             Navigator.push(context, MaterialPageRoute(builder: (context) => TelaEditarRestaurante()));
 
                         IconButton(
