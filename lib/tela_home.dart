@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mimpedir/banco/restaurante_DAO.dart';
 import 'package:mimpedir/tela_cad_restaurante.dart';
+import 'package:mimpedir/tela_editar_restaurante.dart';
 import 'package:mimpedir/usuario.dart';
 import '../restaurante.dart';
 
@@ -47,7 +48,7 @@ class TelaHomeState extends State<TelaHome>{
           child: ListView.builder(
               itemCount: restaurantes.length,
               itemBuilder: (context, index) {
-                final = restaurantes[index];
+                final r = restaurantes[index];
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
@@ -56,12 +57,36 @@ class TelaHomeState extends State<TelaHome>{
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => TelaCadRestaurante()));
-                        }, icon: Icon(Icons.edit, color: Colors.blue,)),
-                        IconButton(onPressed: () {},
-                            icon: Icon(Icons.delete, color: Colors.red,)),
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                          onPressed: () {
+                            TelaEditarRestaurante.restaurante = r;
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => TelaEditarRestaurante()));
+
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text('ATENÇÃO!'),
+                                  content: Text('Confirmar exclusão?'),
+                                  actions: [
+                                TextButton(onPressed:(){
+                                  Navigator.pop(context);
+                                  },child: Text('cancelar')),
+                                  TextButton(onPressed: (){
+                                    RestauranteDAO.excluir(r);
+                                    setState(() {
+                                      carregarRestaurante();
+                                    });
+                                    Navigator.pop(context);
+                                  },child: Text('sim')),
+                                ],
+                              )
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),

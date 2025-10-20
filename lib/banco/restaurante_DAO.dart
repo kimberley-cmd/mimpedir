@@ -5,6 +5,31 @@ import 'package:mimpedir/usuario.dart';
 import '../tipo.dart';
 
 class RestauranteDAO{
+
+  static Future<Restaurante>listar(int? cd) async{
+    final db = await DatabaseHelper.getDatabase();
+    final resultado = await db.query('tb_restaurante',
+      where: 'cd_restaurante = ?',
+      whereArgs: [cd]
+    );
+    return Restaurante(
+      codigo: resultado.first['cd_restaurante'] as int,
+      nome: resultado.first['nm_restaurante'] as String,
+      latitude: resultado.first['latitude_restaurante'] as String,
+      longitude: resultado.first['longitude_restaurante'] as String,
+    );
+  }
+
+  static Future<void> excluir(Restaurante r) async{
+    final db = await DatabaseHelper.getDatabase();
+    final resultado = db.delete('tb_restaurante',
+      where: 'cd_restaurante = ?',
+      whereArgs: [r.codigo]
+    );
+  }
+
+
+
   static Future<List<Restaurante>> listarTodos() async{
     final db = await DatabaseHelper.getDatabase();
     final resultado = await db.query('tb_restaurante',
